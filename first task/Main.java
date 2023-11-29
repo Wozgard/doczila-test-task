@@ -14,7 +14,7 @@ public class Main {
   public static void main(String[] args) {
     Map<String, List<String>> fileDependencies = new HashMap<>();
     try {
-      Files.walk(Paths.get("./fileSystem"))
+      Files.walk(Paths.get("first task/fileSystem"))
           .filter(Files::isRegularFile)
           .forEach(file -> {
             try {
