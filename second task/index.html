@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Управление студентами</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <h1>Функции для управления базой студентов</h1>
+    <form id="getStudents">
+      <h3>Просмотр списка студентов</h3>
+      <button type="submit">Посмотреть список всех студентов</button>
+    </form>
+
+    <form id="createStudentForm">
+      <h3>Создание нового студента</h3>
+      <input type="text" id="firstName" placeholder="Имя" required />
+      <input type="text" id="lastName" placeholder="Фамилия" required />
+      <input type="text" id="middleName" placeholder="Отчество" required />
+      <input type="date" id="birthdate" required />
+      <input type="text" id="group" placeholder="Группа" required />
+      <button type="submit">Создать студента</button>
+    </form>
+
+    <form id="deleteStudentForm">
+      <h3>Удаление студента по уникальному номеру</h3>
+      <input
+        type="number"
+        id="studentId"
+        placeholder="Уникальный номер студента"
+        required
+      />
+      <button type="submit">Удалить студента</button>
+    </form>
+
+    <script src="script.js"></script>
+  </body>
+</html>
