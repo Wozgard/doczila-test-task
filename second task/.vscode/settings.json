@@ -1,0 +1,6 @@
+{
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "c:\\Users\\svayt\\YandexDisk\\Narnia\\Year-2023\\doczila-test-task\\postgresql-42.7.0.jar"
+  ]
+}

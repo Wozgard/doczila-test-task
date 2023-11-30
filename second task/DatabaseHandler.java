@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DatabaseHandler {
   private String jdbcUrl;
@@ -17,20 +14,34 @@ public class DatabaseHandler {
   public void createDatabase(String dbName) {
     try {
       Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-      Statement statement = connection.createStatement();
+      DatabaseMetaData metaData = connection.getMetaData();
 
-      String createDBSQL = "CREATE DATABASE " + dbName;
-      statement.executeUpdate(createDBSQL);
-      System.out.println("Database created successfully.");
+      ResultSet resultSet = metaData.getCatalogs();
+      boolean dbExists = false;
 
-      statement.close();
+      while (resultSet.next()) {
+        String databaseName = resultSet.getString("TABLE_CAT");
+        if (databaseName.equals(dbName)) {
+          dbExists = true;
+          break;
+        }
+      }
+
+      resultSet.close();
+
+      if (dbExists) {
+        System.out.println("Database already exists.");
+      } else {
+        Statement statement = connection.createStatement();
+        String createDBSQL = "CREATE DATABASE " + dbName;
+        statement.executeUpdate(createDBSQL);
+        System.out.println("Database created successfully.");
+        statement.close();
+      }
+
       connection.close();
     } catch (SQLException e) {
       e.printStackTrace();
     }
-  }
-
-  public StudentTableHandler getStudentTableHandler(String dbName) {
-    return new StudentTableHandler(jdbcUrl, username, password);
   }
 }

@@ -1,17 +1,36 @@
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class Server {
+  private static String jdbcUrl = "jdbc:postgresql://localhost:5432/";
+  private static String username = "postgres";
+  private static String password = "6432";
+  private static String dbName = "studentsdb";
+
+  public static DatabaseHandler dataHendler = new DatabaseHandler(jdbcUrl, username, password);
+
+  public static StudentTableHandler studentTable = new StudentTableHandler(jdbcUrl, username, password);;
 
   public static void main(String[] args) throws IOException {
+    dataHendler.createDatabase(dbName);
+    studentTable.createStudentTable(dbName);
+
     int serverPort = 3000;
     HttpServer server = HttpServer.create(new InetSocketAddress(serverPort), 0);
 
@@ -101,20 +120,75 @@ public class Server {
   }
 
   static class StudentsListHandler implements HttpHandler {
+    private Gson gson = new Gson();
+
     public void handle(HttpExchange exchange) throws IOException {
-      // Handle GET request for /students-list
-      // Process logic to get student list
-      String response = "Student List";
-      sendResponse(exchange, response);
+      if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
+        List<String> studentList = studentTable.getStudentList(dbName);
+        System.out.println("Student list: " + studentList);
+
+        String jsonResponse = gson.toJson(studentList);
+        System.out.println("Student list response: " + jsonResponse);
+
+        sendResponse(exchange, jsonResponse);
+      }
+    }
+
+    // Метод для отправки ответа
+    private void sendResponse(HttpExchange exchange, String response) throws IOException {
+      byte[] bytes = response.getBytes("UTF-8");
+      exchange.sendResponseHeaders(200, bytes.length);
+      OutputStream os = exchange.getResponseBody();
+      os.write(bytes);
+      os.flush();
+      os.close();
     }
   }
 
   static class CreateStudentHandler implements HttpHandler {
+    private final JSONParser jsonParser = new JSONParser();
+
+    @Override
     public void handle(HttpExchange exchange) throws IOException {
-      // Handle POST request for /create-student
-      // Process logic to create a student
-      String response = "Student created";
-      sendResponse(exchange, response);
+      if (exchange.getRequestMethod().equalsIgnoreCase("POST")) {
+        InputStreamReader isr = new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8);
+
+        // Чтение JSON-данных
+        try {
+          JSONObject jsonObject = (JSONObject) jsonParser.parse(new BufferedReader(isr));
+
+          // Получение данных из JSON объекта
+          String firstName = (String) jsonObject.get("firstName");
+          String lastName = (String) jsonObject.get("lastName");
+          String middleName = (String) jsonObject.get("middleName");
+          // Парсинг даты рождения, предполагая, что она приходит в нужном формате
+          java.sql.Date birthdate = java.sql.Date.valueOf((String) jsonObject.get("birthdate"));
+          String groupName = (String) jsonObject.get("group");
+
+          // Ваш код для добавления студента в базу данных
+          studentTable.addStudent(dbName, firstName, lastName, middleName, birthdate, groupName);
+
+          String response = "Student created";
+          sendResponse(exchange, response);
+        } catch (ParseException e) {
+          e.printStackTrace();
+          String errorResponse = "Invalid JSON format";
+          exchange.sendResponseHeaders(400, errorResponse.length());
+          exchange.getResponseBody().write(errorResponse.getBytes());
+        }
+      } else {
+        // Обработка других HTTP-методов, если необходимо
+        String response = "Method not allowed";
+        exchange.sendResponseHeaders(405, response.length());
+        exchange.getResponseBody().write(response.getBytes());
+      }
+      exchange.getResponseBody().close();
+    }
+
+    // Метод для отправки ответа
+    private void sendResponse(HttpExchange exchange, String response) throws IOException {
+      exchange.sendResponseHeaders(200, response.length());
+      exchange.getResponseBody().write(response.getBytes());
     }
   }
 

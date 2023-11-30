@@ -19,13 +19,29 @@ document.getElementById('getStudents').addEventListener('submit', function(event
   });
 });
 
+// ==============================================================================
 document.getElementById('createStudentForm').addEventListener('submit', function(event) {
   event.preventDefault();
   
-  const formData = new FormData(this);
+  let firstName = document.getElementById("firstName").value;
+  let lastName = document.getElementById("lastName").value;
+  let middleName = document.getElementById("middleName").value;
+  let birthdate = document.getElementById("birthdate").value;
+  let group = document.getElementById("group").value;
+  
+  let studentData = {
+    firstName: firstName,
+    lastName: lastName,
+    middleName: middleName,
+    birthdate: birthdate,
+    group: group
+  };
+  
+  console.log(studentData);
+
   fetch('/create-student', {
     method: 'POST',
-    body: formData
+    body: JSON.stringify(studentData)
   })
   .then(response => {
     if (!response.ok) {
@@ -39,6 +55,7 @@ document.getElementById('createStudentForm').addEventListener('submit', function
   });
 });
 
+// ==============================================================================
 document.getElementById('deleteStudentForm').addEventListener('submit', function(event) {
   event.preventDefault();
   

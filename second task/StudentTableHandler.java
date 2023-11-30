@@ -22,8 +22,7 @@ public class StudentTableHandler {
           "last_name VARCHAR(50) NOT NULL," +
           "middle_name VARCHAR(50)," +
           "date_of_birth DATE NOT NULL," +
-          "group_name VARCHAR(20) NOT NULL," +
-          "unique_number SERIAL UNIQUE" + // Использование SERIAL для автоинкремента
+          "group_name VARCHAR(20) NOT NULL" +
           ")";
       statement.executeUpdate(createTableSQL);
       System.out.println("Table created successfully.");
@@ -36,7 +35,7 @@ public class StudentTableHandler {
       Date dob, String groupName) {
     try (Connection connection = DriverManager.getConnection(jdbcUrl + dbName, username, password);
         PreparedStatement preparedStatement = connection.prepareStatement(
-            "INSERT INTO students (first_name, last_name, middle_name, date_of_birth, group_name) VALUES (?, ?, ?, ?, ?, ?)")) {
+            "INSERT INTO students (first_name, last_name, middle_name, date_of_birth, group_name) VALUES (?, ?, ?, ?, ?)")) {
       preparedStatement.setString(1, firstName);
       preparedStatement.setString(2, lastName);
       preparedStatement.setString(3, middleName);
@@ -62,10 +61,9 @@ public class StudentTableHandler {
         String middleName = resultSet.getString("middle_name");
         Date dob = resultSet.getDate("date_of_birth");
         String groupName = resultSet.getString("group_name");
-        String uniqueNumber = resultSet.getString("unique_number");
         String studentInfo = "ID: " + id + ", Name: " + firstName + " " + lastName +
             ", Middle Name: " + middleName + ", DOB: " + dob +
-            ", Group: " + groupName + ", Unique Number: " + uniqueNumber;
+            ", Group: " + groupName;
         studentList.add(studentInfo);
       }
     } catch (SQLException e) {
@@ -77,13 +75,13 @@ public class StudentTableHandler {
   public void deleteStudentByUniqueNumber(String dbName, String uniqueNumber) {
     try (Connection connection = DriverManager.getConnection(jdbcUrl + dbName, username, password);
         PreparedStatement preparedStatement = connection.prepareStatement(
-            "DELETE FROM students WHERE unique_number = ?")) {
+            "DELETE FROM students WHERE id = ?")) {
       preparedStatement.setString(1, uniqueNumber);
       int deletedRows = preparedStatement.executeUpdate();
       if (deletedRows > 0) {
-        System.out.println("Student with unique number " + uniqueNumber + " deleted successfully.");
+        System.out.println("Student with id " + uniqueNumber + " deleted successfully.");
       } else {
-        System.out.println("No student found with unique number " + uniqueNumber);
+        System.out.println("No student found with id " + uniqueNumber);
       }
     } catch (SQLException e) {
       e.printStackTrace();
