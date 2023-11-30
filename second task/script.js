@@ -12,7 +12,11 @@ document.getElementById('getStudents').addEventListener('submit', function(event
   })
   .then(data => {
     // Обработка полученных данных, например, вывод на страницу
-    console.log('Список студентов:', data);
+    let studentsList = '';
+    data.forEach(student => {
+      studentsList += student + '\n\n';
+    });
+    alert(`Список студентов: \n${studentsList}`);
   })
   .catch(error => {
     alert(error.message);
@@ -60,7 +64,7 @@ document.getElementById('deleteStudentForm').addEventListener('submit', function
   event.preventDefault();
   
   const studentId = document.getElementById('studentId').value;
-  fetch(`/delete-student?id=${studentId}`, {
+  fetch(`/delete-student/${studentId}`, {
     method: 'DELETE'
   })
   .then(response => {

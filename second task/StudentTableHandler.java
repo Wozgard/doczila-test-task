@@ -61,9 +61,9 @@ public class StudentTableHandler {
         String middleName = resultSet.getString("middle_name");
         Date dob = resultSet.getDate("date_of_birth");
         String groupName = resultSet.getString("group_name");
-        String studentInfo = "ID: " + id + ", Name: " + firstName + " " + lastName +
-            ", Middle Name: " + middleName + ", DOB: " + dob +
-            ", Group: " + groupName;
+        String studentInfo = "ID: " + id + ",\nИмя: " + firstName + ",\nФамилия: " + lastName +
+            ",\nОтчество: " + middleName + ",\nДата рождения: " + dob +
+            ",\nГруппа: " + groupName;
         studentList.add(studentInfo);
       }
     } catch (SQLException e) {
@@ -72,11 +72,11 @@ public class StudentTableHandler {
     return studentList;
   }
 
-  public void deleteStudentByUniqueNumber(String dbName, String uniqueNumber) {
+  public void deleteStudentByUniqueNumber(String dbName, Integer uniqueNumber) {
     try (Connection connection = DriverManager.getConnection(jdbcUrl + dbName, username, password);
         PreparedStatement preparedStatement = connection.prepareStatement(
             "DELETE FROM students WHERE id = ?")) {
-      preparedStatement.setString(1, uniqueNumber);
+      preparedStatement.setInt(1, uniqueNumber);
       int deletedRows = preparedStatement.executeUpdate();
       if (deletedRows > 0) {
         System.out.println("Student with id " + uniqueNumber + " deleted successfully.");

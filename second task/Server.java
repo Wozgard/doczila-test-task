@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -49,7 +50,6 @@ public class Server {
   static class RootHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
       File file = new File("second task/index.html");
-      System.out.println("File path: " + file.getAbsolutePath());
 
       if (file.exists() && file.isFile()) {
         FileInputStream fis = new FileInputStream(file);
@@ -125,23 +125,9 @@ public class Server {
     public void handle(HttpExchange exchange) throws IOException {
       if (exchange.getRequestMethod().equalsIgnoreCase("GET")) {
         List<String> studentList = studentTable.getStudentList(dbName);
-        System.out.println("Student list: " + studentList);
-
         String jsonResponse = gson.toJson(studentList);
-        System.out.println("Student list response: " + jsonResponse);
-
         sendResponse(exchange, jsonResponse);
       }
-    }
-
-    // Метод для отправки ответа
-    private void sendResponse(HttpExchange exchange, String response) throws IOException {
-      byte[] bytes = response.getBytes("UTF-8");
-      exchange.sendResponseHeaders(200, bytes.length);
-      OutputStream os = exchange.getResponseBody();
-      os.write(bytes);
-      os.flush();
-      os.close();
     }
   }
 
@@ -194,17 +180,36 @@ public class Server {
 
   static class DeleteStudentHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
-      // Handle DELETE request for /delete-student
-      // Process logic to delete a student
-      String response = "Student deleted";
-      sendResponse(exchange, response);
+      System.out.println("Delete student with ID: ");
+      if (exchange.getRequestMethod().equalsIgnoreCase("DELETE")) {
+        // Get student ID from the request path
+        URI requestURI = exchange.getRequestURI();
+        String path = requestURI.getPath();
+        String[] pathSegments = path.split("/");
+
+        // Extract student ID from the path
+        Integer studentId = Integer.parseInt(pathSegments[pathSegments.length - 1]);
+
+        // Process logic to delete a student
+        System.out.println("Delete student with ID: " + studentId);
+        studentTable.deleteStudentByUniqueNumber(dbName, studentId);
+
+        sendResponse(exchange, "Student deleted");
+      } else {
+        // Method not allowed
+        exchange.sendResponseHeaders(405, 0); // 405 Method Not Allowed
+        exchange.getResponseBody().close();
+      }
     }
   }
 
+  // Метод для отправки ответа
   private static void sendResponse(HttpExchange exchange, String response) throws IOException {
-    exchange.sendResponseHeaders(200, response.getBytes().length);
+    byte[] bytes = response.getBytes("UTF-8");
+    exchange.sendResponseHeaders(200, bytes.length);
     OutputStream os = exchange.getResponseBody();
-    os.write(response.getBytes());
+    os.write(bytes);
+    os.flush();
     os.close();
   }
 }
