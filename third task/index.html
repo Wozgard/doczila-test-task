@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Todo List</title>
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <link rel="stylesheet" href="./styles/header.css" />
+    <link rel="stylesheet" href="./styles/sidebar.css" />
+    <link rel="stylesheet" href="./styles/task.css" />
+    <link rel="stylesheet" href="./styles/task-list.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
+    />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div id="header"></div>
+      <main class="main">
+        <div class="main__container container">
+          <div id="sidebar"></div>
+          <div class="main__task-list task-list">
+            <div class="task-list__nav">
+              <div id="selected-date" class="task-list__selected-date"></div>
+              <div class="task-list__sort-by-date">
+                <img
+                  class="task-list__sort-by-date-icon"
+                  src="./public/sort_icon.svg"
+                  alt="sort icon"
+                />
+                <div>Сортировать по дате</div>
+              </div>
+            </div>
+            <div id="task-list" class="task-list__container"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="./components/header.js"></script>
+    <script src="./components/sidebar.js"></script>
+    <script src="./scripts/script.js"></script>
+    <script src="./components/task.js"></script>
+  </body>
+</html>

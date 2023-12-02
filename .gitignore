@@ -1,2 +1,3 @@
 output.txt
 *.class
+*/node_modules

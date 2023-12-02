@@ -1,0 +1,23 @@
+.sidebar {
+  padding-right: 30px;
+  height: 90%;
+  border-right: 2px solid #e5e5e5;
+}
+.sidebar__today {
+}
+.sidebar__this-week {
+}
+.sidebar__datepicker {
+}
+.sidebar__pending {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+.sidebar__pending-input {
+  width: 20px;
+  height: 20px;
+}
+.sidebar__pending-text {
+  margin-left: 5px;
+}
