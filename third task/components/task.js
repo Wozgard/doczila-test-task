@@ -1,20 +1,11 @@
 const taskList = document.getElementById("task-list");
 
-const fetchTasks = async () => {
-  const response = await fetch(
-    "/fetchData",
-    {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-    }
-  );
-  return await response.json();
+export const fetchTasks = async () => {
+  const response = await fetch("/fetchData");
+  renderTasks(await response.json());
 };
 
-const renderTasks = async () => {
-  const tasks = await fetchTasks();
+export const renderTasks = async (tasks) => {
   console.log(tasks);
   let tasksHTML = ``;
   tasks.forEach((task) => {
@@ -45,4 +36,12 @@ const renderTasks = async () => {
 
   taskList.innerHTML = tasksHTML;
 };
-renderTasks();
+
+export const loadTasks = async () => {
+  const loaderHTML = `
+  <div class="loader-container">
+    <div class="loader"></div>
+  </div>
+  `;
+  taskList.innerHTML = loaderHTML;
+};

@@ -1,7 +1,7 @@
-// Получаем элемент с id "header"
+import { renderTasks, loadTasks } from "./task.js";
+
 const header = document.getElementById("header");
 
-// Создаем новый HTML код
 const headerHTML = `
 <header class="header">
   <div class="header__container container">
@@ -30,3 +30,41 @@ if (header) {
 } else {
   console.error('Элемент с id "header" не найден.');
 }
+
+export const searchListener = () => {
+  const inputElement = document.querySelector(".header__search-input");
+
+  let timerId;
+
+  // Функция для отправки запроса
+  const sendRequest = async (value) => {
+    const response = await fetch(`/findTask?q=${value}`);
+    const tasks = await response.json();
+    if (tasks.length > 0) {
+      renderTasks(tasks);
+    }
+    else {
+      const taskList = document.getElementById("task-list");
+      const loaderHTML = `
+      <div class="loader-container">
+        Извините, но по вашему запросу ничего не найдено :(
+      </div>
+      `;
+      taskList.innerHTML = loaderHTML;
+    }
+  };
+
+  // Обработчик события input
+  inputElement.addEventListener("input", function (event) {
+    // Очищаем таймер при каждом вводе
+    clearTimeout(timerId);
+
+    const value = event.target.value;
+
+    // Устанавливаем таймер на 3 секунды после окончания ввода
+    timerId = setTimeout(() => {
+      sendRequest(value);
+      loadTasks();
+    }, 500);
+  });
+};

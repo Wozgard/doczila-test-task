@@ -1,3 +1,6 @@
+import { fetchTasks, loadTasks } from "../components/task.js";
+import { searchListener } from "../components/header.js";
+
 document.addEventListener("DOMContentLoaded", async function () {
   setSelectedDate(new Date());
 
@@ -8,6 +11,13 @@ document.addEventListener("DOMContentLoaded", async function () {
       setSelectedDate(date);
     },
   });
+
+  // for task list
+  loadTasks();
+  fetchTasks();
+
+  // for search
+  searchListener();
 });
 
 const setSelectedDate = (date) => {
