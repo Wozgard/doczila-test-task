@@ -1,0 +1,26 @@
+.task-list {
+  width: 100%;
+  padding: 0 0 40px 30px;
+}
+
+.task-list__nav {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.task-list__container {
+  margin-top: 20px;
+}
+
+.task-list__sort-by-date {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.task-list__sort-by-date-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
