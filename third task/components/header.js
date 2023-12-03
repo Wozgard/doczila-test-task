@@ -40,6 +40,7 @@ export const searchListener = () => {
   const sendRequest = async (value) => {
     const response = await fetch(`/findTask?q=${value}`);
     const tasks = await response.json();
+    localStorage.setItem('tasks', JSON.stringify(tasks));
     renderTasks(tasks);
   };
 

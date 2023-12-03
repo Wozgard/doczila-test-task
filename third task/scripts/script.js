@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   checkboxListener();
   todayButtonListener();
   thisWeekButtonListener();
+  sortByDateListener();
 });
 
 export const whenDateSelected = (dateText, toDate = "") => {
@@ -74,5 +75,31 @@ const findTaskByDate = async (date, toDate = "", findByStatus = false) => {
   const response = await fetch(
     `/findTaskByDate?from=${startOfDay.valueOf()}&to=${endOfDay.valueOf()}&findByStatus=${findByStatus}`
   );
-  renderTasks(await response.json());
+
+
+  const tasks = await response.json();
+
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks(tasks);
+};
+
+
+// Сортировка задач по дате ==================
+const sortByDateListener = () => {
+  const sortButton = document.querySelector(".task-list__sort-by-date");
+  sortButton.addEventListener("click", () => {
+    sortByDate();
+  });
+};
+
+const sortByDate = () => {
+  const tasksArray = JSON.parse(localStorage.getItem('tasks'));
+
+  const newTaskArray = tasksArray.sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return dateB - dateA;
+  });
+
+  renderTasks(newTaskArray);
 };

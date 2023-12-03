@@ -1,8 +1,14 @@
+import { modalListener } from "../components/modal.js";
+
+
 const taskList = document.getElementById("task-list");
 
 export const fetchTasks = async () => {
   const response = await fetch("/fetchData");
-  renderTasks(await response.json());
+  const tasks = await response.json();
+
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  renderTasks(tasks);
 };
 
 export const renderTasks = async (tasks) => {
@@ -21,7 +27,7 @@ export const renderTasks = async (tasks) => {
       const isChecked = task.status ? "checked" : "";
 
       tasksHTML += `
-    <div class="task-list__task task">
+    <div class="task-list__task task _openModalBtn" data-modal=${task.id}>
       <div class="task__left-part">
         <h2 class="task__header">${task.name}</h2>
         <div class="task__description">${task.shortDesc}</div>
@@ -29,6 +35,14 @@ export const renderTasks = async (tasks) => {
       <div class="task__right-part">
         <input class="task__checkbox" type="checkbox" ${isChecked} />
         <div class="task__date">${taskDate}</div>
+      </div>
+    </div>
+
+    <div id=${task.id} class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 class="modal-title">${task.name}</h2>
+        <p class="modal-description">${task.fullDesc}</p>
       </div>
     </div>
 
@@ -44,6 +58,7 @@ export const renderTasks = async (tasks) => {
     `;
     taskList.innerHTML = loaderHTML;
   }
+  modalListener();
 };
 
 export const loadTasks = async () => {
