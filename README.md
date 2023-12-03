@@ -99,9 +99,11 @@ Folder 2/File 2-2
 1. Когда мы выбираем файл .java в самом низу файловой системы появляется окно Java project
 2. В окне в самом низу есть Referenced Libraries
 3. Нажимаем на + возле них и добавляем файлы
+
 ![image](https://github.com/Wozgard/doczila-test-task/assets/85787438/9f8be44b-647d-4be7-b653-f46370986fdd)
 
 Также должен быть установлен и запущен PostgreSQL. В строках 23-24 файла Server.java необходимо изменить на свои данные пользователя postres
+
 ![image](https://github.com/Wozgard/doczila-test-task/assets/85787438/c7e1e0ba-c649-4817-ac21-09cdb2574e33)
 
 Запуск также лучше осуществлять из папки /doczila-test-task, а не /doczila-test-task/second task
