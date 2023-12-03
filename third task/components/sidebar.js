@@ -26,5 +26,35 @@ export const checkboxListener = () => {
   checkbox.addEventListener("change", () => {
     const date = new Date(document.getElementById("datepicker").value);
     whenDateSelected(date);
-  })
-}
+  });
+};
+
+export const todayButtonListener = () => {
+  const todayButton = document.querySelector(".sidebar__today");
+  todayButton.addEventListener("click", () => {
+    const date = new Date();
+    whenDateSelected(date);
+  });
+};
+
+export const thisWeekButtonListener = () => {
+  const thisWeekButton = document.querySelector(".sidebar__this-week");
+  thisWeekButton.addEventListener("click", () => {
+    // Получаем текущую дату
+    const currentDate = new Date();
+
+    // Получаем день недели (0 - воскресенье, 1 - понедельник, и т.д.)
+    const currentDay = currentDate.getDay();
+
+    // Находим начало недели
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(
+      currentDate.getDate() - currentDay + (currentDay === 0 ? -6 : 1)
+    );
+
+    // Находим конец недели
+    const endOfWeek = new Date(currentDate);
+    endOfWeek.setDate(startOfWeek.getDate() + 7);
+    whenDateSelected(startOfWeek, endOfWeek);
+  });
+};
