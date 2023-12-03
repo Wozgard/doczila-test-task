@@ -50,6 +50,26 @@ app.get("/findTask", async (req, res) => {
   }
 });
 
+app.get("/findTaskByDate", async (req, res) => {
+  try {
+    const parsedUrl = url.parse(req.url);
+
+    const queryParams = querystring.parse(parsedUrl.query);
+
+    const fromDate = queryParams.from;
+    const toDate = queryParams.to;
+    const findByStatus = queryParams.findByStatus === 'true';
+    const status = findByStatus ? "&status=false" : '';
+
+    const response = await axios.get(
+      `https://todo.doczilla.pro/api/todos/date?from=${fromDate}&to=${toDate}${status}&limit=10`
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`http://localhost:${PORT}`);

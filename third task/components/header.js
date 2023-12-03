@@ -40,18 +40,7 @@ export const searchListener = () => {
   const sendRequest = async (value) => {
     const response = await fetch(`/findTask?q=${value}`);
     const tasks = await response.json();
-    if (tasks.length > 0) {
-      renderTasks(tasks);
-    }
-    else {
-      const taskList = document.getElementById("task-list");
-      const loaderHTML = `
-      <div class="loader-container">
-        Извините, но по вашему запросу ничего не найдено :(
-      </div>
-      `;
-      taskList.innerHTML = loaderHTML;
-    }
+    renderTasks(tasks);
   };
 
   // Обработчик события input

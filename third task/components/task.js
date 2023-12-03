@@ -6,20 +6,21 @@ export const fetchTasks = async () => {
 };
 
 export const renderTasks = async (tasks) => {
-  console.log(tasks);
-  let tasksHTML = ``;
-  tasks.forEach((task) => {
-    const taskDate = new Intl.DateTimeFormat("ru-RU", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    }).format(new Date(task.date));
+  if (tasks.length > 0) {
+    console.log(tasks);
+    let tasksHTML = ``;
+    tasks.forEach((task) => {
+      const taskDate = new Intl.DateTimeFormat("ru-RU", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      }).format(new Date(task.date));
 
-    const isChecked = task.status ? "checked" : "";
+      const isChecked = task.status ? "checked" : "";
 
-    tasksHTML += `
+      tasksHTML += `
     <div class="task-list__task task">
       <div class="task__left-part">
         <h2 class="task__header">${task.name}</h2>
@@ -32,9 +33,17 @@ export const renderTasks = async (tasks) => {
     </div>
 
     `;
-  });
+    });
 
-  taskList.innerHTML = tasksHTML;
+    taskList.innerHTML = tasksHTML;
+  } else {
+    const loaderHTML = `
+    <div class="loader-container">
+      Извините, но по вашему запросу ничего не найдено :(
+    </div>
+    `;
+    taskList.innerHTML = loaderHTML;
+  }
 };
 
 export const loadTasks = async () => {
